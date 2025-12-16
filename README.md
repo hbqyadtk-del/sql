@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>نظام إدارة الطلاب - فاخر</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #0c0c0c, #1a1a1a);
+      color: #00eaff;
+      padding: 10px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .box {
+      background: rgba(0, 0, 0, 0.85);
+      width: 100%;
+      max-width: 900px;
+      padding: 20px;
+      border-radius: 20px;
+      border: 2px solid #00eaff;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
+      margin-top: 15px;
+      display: none;
+    }
+    .box.active {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h2 {
+      color: #00eaff;
+      margin-bottom: 20px;
+      font-size: 24px;
+      font-weight: 700;
+      text-align: center;
+    }
+    h3 {
+      margin: 15px 0 8px;
+      font-size: 18px;
+    }
+    .form-group {
+      margin: 12px 0;
+      width: 100%;
+    }
+    .form-group label {
+      display: block;
+      text-align: right;
+      margin-bottom: 6px;
+      font-size: 16px;
+      color: #fff;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 2px solid #00eaff;
+      background: #111;
+      color: #fff;
+      font-size: 16px;
+      outline: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
+    }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 12px;
+      background: #000;
+      color: #00eaff;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      border: 2px solid #00eaff;
+      transition: all 0.3s;
+    }
+    .btn:hover {
+      background: #00eaff;
+      color: #000;
+    }
+    .btn-danger {
+      background: #ff3366;
+      color: white;
+      border-color: #ff3366;
+    }
+    .btn-danger:hover {
+      background: white;
+      color: #ff3366;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin: 20px 0;
+    }
+    @media (max-width: 600px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .grid-item {
+      background: #111;
+      color: #00eaff;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+      border: 2px solid #00eaff;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+    .grid-item:hover {
+      background: #000;
+      box-shadow: 0 0 20px #00eaff;
+    }
+    .table-container {
+      overflow-x: auto;
+      width: 100%;
+      margin: 15px 0;
+      border-radius: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #000;
+      color: #00eaff;
+      border-radius: 10px;
+      overflow: hidden;
+      min-width: 600px;
+    }
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid #00eaff;
+      font-size: 14px;
+    }
+    th {
+      background: #111;
+    }
+    tr:nth-child(even) {
+      background-color: #0a0a0a;
+    }
+    tr:hover {
+      background: #1a1a1a !important;
+    }
+    #searchInput,
+    #globalTeacherSearch,
+    #teacherLoginPassword {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: 2px solid #00eaff;
+      background: #111;
+      color: #fff;
+      font-size: 16px;
+    }
+    .btn-sm {
+      padding: 4px 8px !important;
+      font-size: 14px !important;
+      width: auto !important;
+      margin: 2px !important;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 6px;
+      background: #111;
+      color: #fff;
+      border: 1px solid #00eaff;
+      border-radius: 4px;
+      text-align: center;
+    }
+    .class-subject-item {
+      background: #111;
+      padding: 12px;
+      border-radius: 10px;
+      margin: 8px 0;
+      border: 1px solid #00eaff;
+      cursor: pointer;
+    }
+    .class-subject-item:hover {
+      background: #0a0a0a;
+      box-shadow: 0 0 10px #00eaff;
+    }
+    .class-subject-item h4 {
+      margin: 0 0 6px;
+      color: #00eaff;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- تسجيل الدخول -->
+<div class="box active" id="loginPage">
+  <h2>تسجيل الدخول</h2>
+  <div class="form-group">
+    <label>اسم المستخدم</label>
+    <input type="text" id="username" placeholder="أدخل اسم المستخدم" />
+  </div>
+  <div class="form-group">
+    <label>كلمة المرور</label>
+    <input type="password" id="password" placeholder="أدخل كلمة المرور" />
+  </div>
+  <div style="margin-top: 20px;">
+    <button class="btn" onclick="login()">دخول</button>
+  </div>
+</div>
+
+<!-- القائمة -->
+<div class="box" id="menuPage">
+  <h2>القائمة الرئيسية</h2>
+  <div class="grid">
+    <div class="grid-item" onclick="openStudentsPage()">🧑‍🎓 الطلاب</div>
+    <div class="grid-item" onclick="openTeachersPage()">👩‍🏫 المعلمين</div>
+    <div class="grid-item">⚙️ الإعدادات</div>
+  </div>
+</div>
+
+<!-- صفحة الطلاب -->
+<div class="box" id="studentsPage">
+  <h2>إدارة الطلاب</h2>
+  <div class="grid">
+    <div class="grid-item" onclick="showAddStudent()">➕ إضافة طالب</div>
+    <div class="grid-item" onclick="showViewStudents()">📋 عرض الطلاب</div>
+    <div class="grid-item" onclick="showFeesPage()">💰 الرسوم</div>
+    <div class="grid-item" onclick="showGradesPage()">📊 الدرجات</div>
+    <div class="grid-item" onclick="showDeletedStudents()">🗑️ الطلاب المحذوفون</div>
+  </div>
+  <button class="btn" onclick="goBack()">🔙 رجوع</button>
+</div>
+
+<!-- إضافة طالب -->
+<div class="box" id="addStudentPage">
+  <h2>إضافة طالب جديد</h2>
+  <div class="form-group">
+    <label>اختر الصف</label>
+    <select id="stuClassForNew">
+      <option value="الصف الأول ابتدائي">الصف الأول ابتدائي</option>
+      <option value="الصف الثاني ابتدائي">الصف الثاني ابتدائي</option>
+      <option value="الصف الثالث ابتدائي">الصف الثالث ابتدائي</option>
+      <option value="الصف الأول متوسط">الصف الأول متوسط</option>
+      <option value="الصف الثاني متوسط">الصف الثاني متوسط</option>
+      <option value="الصف الثالث متوسط">الصف الثالث متوسط</option>
+      <option value="الصف الأول ثانوي">الصف الأول ثانوي</option>
+      <option value="الصف الثاني ثانوي">الصف الثاني ثانوي</option>
+      <option value="الصف الثالث ثانوي">الصف الثالث ثانوي</option>
+    </select>
+  </div>
+  <div class="form-group"><label>الاسم الكامل للطالب</label><input type="text" id="stuFullName" placeholder="أدخل الاسم الكامل" /></div>
+  <div class="form-group"><label>رقم هاتف ولي الأمر</label><input type="text" id="stuGuardianPhone" placeholder="أدخل رقم الهاتف" /></div>
+  <div class="form-group"><label>الجنس</label>
+    <select id="stuGender">
+      <option value="ذكر">ذكر</option>
+      <option value="أنثى">أنثى</option>
+    </select>
+  </div>
+  <div class="form-group"><label>رقم شهادة الميلاد</label><input type="text" id="stuBirthCert" placeholder="أدخل الرقم" /></div>
+  <div class="form-group"><label>ملاحظات</label><textarea id="stuNotes" rows="2" placeholder="أي ملاحظات إضافية"></textarea></div>
+  <h3 style="text-align:right; margin:20px 0 10px; color:#00eaff;">حقول إضافية</h3>
+  <div id="extraFieldsContainer"></div>
+  <button class="btn" style="background:#333;" onclick="addExtraField()">➕ إضافة حقل مخصص</button>
+  <div style="margin-top: 20px;">
+    <button class="btn btn-primary" onclick="saveStudent()">💾 حفظ الطالب</button>
+    <button class="btn" onclick="goBack()">🔙 رجوع</button>
+  </div>
+</div>
+
+<!-- عرض الطلاب -->
+<div class="box" id="viewStudentsPage">
+  <h2>اختر الصف لعرض الطلاب</h2>
+  <div class="grid" id="classGrid"></div>
+  <button class="btn" onclick="goBack()">🔙 رجوع</button>
+</div>
+
+<!-- قائمة الطلاب في صف -->
+<div class="box" id="studentsListPage">
+  <h2>الطلاب في <span id="currentClass"></span></h2>
+  <input type="text" id="searchInput" placeholder="ابحث باسم الطالب..." />
+  <div class="table-container">
+    <table id="studentsTable">
+      <thead><tr></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <button class="btn" onclick="goBack()">🔙 رجوع</button>
+</div>
+
+<!-- صفحة الطلاب المحذوفين -->
+<div class="box" id="deletedStudentsPage">
+  <h2>الطلاب المحذوفون</h2>
+  <div class="table-container">
+    <table id="deletedStudentsTable">
+      <thead><tr></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <button class="btn" onclick="goBack()">🔙 رجوع</button>
+</div>
+
+<!-- === صفحة موحدة للرسوم === -->
+<div class="box" id="feesUnifiedPage">
+  <h2>الرسوم — <span id="feesUnifiedClassName"></span></h2>
+  <button class="btn" onclick="toggleAddMonthForm()" style="width:auto; margin:10px 0;">➕ إضافة شهر جديد</button>
+  <div id="addMonthForm" style="display:none; background:#111; padding:15px; border-radius:12px; margin:15px 0;">
+    <h3 style="text-align:right; margin:0 0 10px; color:#00eaff;">إضافة شهر جديد</h3>
+    <div class="form-group">
+      <label>اسم الشهر</label>
+      <input type="text" id="unifiedFeeMonth" placeholder="مثلاً: ربيع أول" />
+    </div>
+    <div class="form-group">
+      <label>السنة</label>
+      <input type="text" id="unifiedFeeYear" placeholder="مثلاً: 1447" />
+    </div>
+    <div class="form-group">
+      <label>المبلغ المستحق (ريال)</label>
+      <input type="number" id="unifiedFeeAmount" placeholder="أدخل المبلغ" />
+    </div>
+    <div class="form-group">
+      <label>ملاحظة عامة</label>
+      <textarea id="unifiedFeeNote" rows="1" placeholder="ملاحظة عن هذا الشهر (اختياري)"></textarea>
+    </div>
+    <div style="margin-top: 15px;">
+      <button class="btn" onclick="saveUnifiedFeeMonth()" style="width:auto; margin:0 10px 0 0;">💾 حفظ الشهر</button>
+      <button class="btn" onclick="toggleAddMonthForm()" style="width:auto; background:#ff3366; border-color:#ff3366; color:white;">إلغاء</button>
+    </div>
+  </div>
+  <div style="margin:15px 0;">
+    <button class="btn" style="background:#333;" onclick="addFeesCustomField()">➕ إضافة حقل مخصص</button>
+  </div>
+  <h3 style="text-align:right; margin:20px 0 10px; color:#00eaff;">الشهور المضافة:</h3>
+  <div id="unifiedMonthsList" style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px;"></div>
+  <div id="unifiedStudentsTableContainer" style="display:none;">
+    <h3 id="unifiedMonthTitle" style="text-align:center; margin:20px 0; color:#00eaff;"></h3>
+    <div class="table-container">
+      <table id="unifiedStudentsTable">
+        <thead><tr></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+  <button class="btn" onclick="goBack()">🔙 رجوع</button>
+</div>
+
+<!-- اختيار الصف للرسوم -->
+<div class="box" id="feesClassSelectPage">
+  <h2>اختر الصف لتسجيل الرسوم</h2>
+  <div class="grid" id="feesClassGridUnique"></div>
+  <button class="btn" onclick="goBack()">🔙 رجوع</button>
+</div>
+
+<!-- صفحة الدرجات -->
+<div class="box" id="gradesPage">
+  <h2>اختر الصف لعرض أو إدخال الدرجات</h2>
+  <div class="grid" id="gradesClassGrid"></div>
+  <button class="btn" onclick="goBack()">🔙 رجوع</button>
+</div>
+
+<!-- المعلمون -->
+<div class="box" id="teachersPage">
+  <h2>إدارة المعلمين</h2>
+  <div class="grid">
+    <div class="grid-item" onclick="showAddTeacher()">➕ إضافة معلم</div>
+<div class="grid-item" onclick="showTeachersByClass()">📋 عرض المعلمين</div>    <div class="grid-item" onclick="showSalariesPage()">💰 الرواتب</div>
+    <div class="grid-item" onclick="showAttendancePage()">📅 الحضور</div>
+    <div class="grid-item" onclick="showDeletedTeachers()">🗑️ المعلمون المحذوفون</div>
+  </div>
+  <button class="btn" onclick="goBack()">🔙 رجوع</button>
+</div>
+
+<!-- إضافة معلم جديد -->
+<div class="box" id="addTeacherPage">
+  <h2>إضافة معلم جديد</h2>
+  <div class="form-group">
+    <label>اسم المستخدم (يُستخدم للدخول)</label>
+    <input type="text" id="teacherUsername" placeholder="مثل: ahmed_math" />
+  </div>
+  <div class="form-group">
+    <label>كلمة السر</label>
+    <input type="password" id="teacherPassword" placeholder="أدخل كلمة سر فريدة" />
+  </div>
+  <div class="form-group">
+    <label>الاسم الكامل</label>
+    <input type="text" id="teacherFullName" placeholder="أدخل الاسم الكامل" />
+  </div>
+  <div class="form-group">
+    <label>رقم الهاتف</label>
+    <input type="text" id="teacherPhone" placeholder="أدخل رقم الهاتف" />
+  </div>
+
+  <h3 style="text-align:right; margin:20px 0 10px; color:#00eaff;">الصفوف والمقررات</h3>
+  <div id="teacherClassesContainer"></div>
+  <button class="btn" style="background:#333; margin:10px 0;" onclick="addTeacherClassSubjectRow()">➕ إضافة صف/مقرر</button>
+
+  <div class="form-group">
+    <label>نظام الراتب</label>
+    <select id="teacherSalaryType">
+      <option value="">اختر النظام</option>
+      <option value="monthly">شهري</option>
+      <option value="weekly">أسبوعي</option>
+      <option value="daily">يومي</option>
+      <option value="probation">تحت التجربة</option>
+    </select>
+  </div>
+  <div class="form-group" id="amountField" style="display:none;">
+    <label>المبلغ المتفق عليه (ريال)</label>
+    <input type="number" id="teacherAgreedAmount" placeholder="أدخل المبلغ" />
+  </div>
+  <div class="form-group">
+    <label>ملاحظات</label>
+    <textarea id="teacherNotes" rows="2" placeholder="أي ملاحظات إضافية"></textarea>
+  </div>
+  <div id="customTeacherFields"></div>
+  <button class="btn" style="background:#333; margin:10px 0;" onclick="addTeacherField()">➕ إضافة حقل مخصص</button>
+  <div style="margin-top: 20px;">
+    <button class="btn" onclick="saveTeacherAdvanced()">💾 حفظ المعلم</button>
+    <button class="btn" onclick="goBack()">🔙 رجوع</button>
+  </div>
+</div>
+
+<!-- عرض المعلمين -->
+<div class="box" id="teachersByClassPage">
+  <h2>المعلمون حسب الصفوف</h2>
+  <input type="text" id="globalTeacherSearch" placeholder="ابحث باسم المعلم..." />
+  <div id="teachersTablesContainer"></div>
+  <button class="btn" onclick="goBack()">🔙 رجوع</button>
+</div>
+
+<!-- المعلمون المحذوفون -->
+<div class="box" id="deletedTeachersPage">
+  <h2>المعلمون المحذوفون</h2>
+  <div class="table-container">
+    <table id="deletedTeachersTable">
+      <thead><tr></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <button class="btn" onclick="goBack()">🔙 رجوع</button>
+</div>
+
+<!-- الرواتب -->
+<div class="box" id="salariesPage">
+  <h2>رواتب المعلمين</h2>
+  <div class="table-container">
+    <table id="salariesTable">
+      <thead>
+        <tr>
+          <th>اسم المعلم</th>
+          <th>الراتب المتفق عليه</th>
+          <th>الراتب المسلم</th>
+          <th>الإجراءات</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <button class="btn" onclick="goBack()">🔙 رجوع</button>
+</div>
+
+<!-- سند الاستلام -->
+<div class="box" id="receiptPage" style="max-width: 600px; text-align: center; display: none;">
+  <h2>سند استلام راتب</h2>
+  <p>مدرسة: <strong>مدرسة الفاخر النموذجية</strong></p>
+  <p>اسم المعلم: <strong id="receipt-teacher-name"></strong></p>
+  <p>المبلغ المستلم: <strong id="receipt-amount"></strong> ريال</p>
+  <p id="receipt-status"></p>
+  <p>تاريخ الاستلام: <strong id="receipt-date"></strong></p>
+  <p style="margin-top: 40px;">___________________</p>
+  <p>توقيع المعلم</p>
+  <div style="margin-top: 20px;">
+    <button class="btn" onclick="window.print()">🖨️ طباعة السند</button>
+    <button class="btn" onclick="goBack()">🔙 رجوع</button>
+  </div>
+</div>
+
+<!-- الحضور -->
+<div class="box" id="attendancePage">
+  <h2>نظام الحضور</h2>
+  <div class="grid">
+    <div class="grid-item" onclick="showWeeklyAttendance()">📆 الأسبوع</div>
+    <div class="grid-item" onclick="showMonthlyAttendance()">📅 الشهر</div>
+  </div>
+  <button class="btn" onclick="goBack()">🔙 رجوع</button>
+</div>
+
+<!-- الحضور الأسبوعي -->
+<div class="box" id="weeklyAttendancePage">
+  <h2 id="weekTitle">الحضور الأسبوعي</h2>
+  <div class="table-container">
+    <table id="attendanceTable">
+      <thead><tr></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <button class="btn" id="finalizeWeekBtn" onclick="finalizeCurrentWeek()">🖨️ جرد الأسبوع</button>
+  <button class="btn" onclick="goBack()">🔙 رجوع</button>
+</div>
+
+<!-- الحضور الشهري -->
+<div class="box" id="monthlyAttendancePage">
+  <h2>الحضور الشهري</h2>
+  <h3 id="currentMonthDisplay">الشهر الحالي</h3>
+  <div id="weeksList" class="grid" style="grid-template-columns: 1fr;"></div>
+  <button class="btn" onclick="goBack()">🔙 رجوع</button>
+</div>
+
+<!-- سجل الرسوم -->
+<div class="box" id="studentFeesHistoryPage">
+  <h2>سجل الرسوم — <span id="historyStudentName"></span></h2>
+  <div id="studentFeesHistoryList" style="text-align: right; line-height: 1.8; margin: 15px 0;"></div>
+  <button class="btn" onclick="goBack()">🔙 رجوع</button>
+</div>
+
+<!-- === واجهات المعلم المتقدم === -->
+<div class="box" id="teacherDashboard">
+  <h2>مرحبًا، <span id="teacherDashboardName"></span></h2>
+  <h3>الصفوف التي تُدرّسها:</h3>
+  <div id="teacherClassesSubjects"></div>
+  <button class="btn" onclick="showPage('loginPage')">🚪 خروج</button>
+</div>
+
+<div class="box" id="dailyEvaluationPage">
+  <h2>التقييم اليومي — <span id="evalClass"></span> / <span id="evalSubject"></span></h2>
+  <p style="text-align:center; color:#ffcc00;">هذه الميزة قيد التطوير في الإصدار القادم.</p>
+  <button class="btn" onclick="goBack()">🔙 رجوع</button>
+</div>
+
+<script src="app.js"></script>
+</body>
+
+</html>
